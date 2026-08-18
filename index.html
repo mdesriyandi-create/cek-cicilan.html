@@ -16,7 +16,7 @@
         .search-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
         button { background: #d4af37; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
         button:hover { background: #b8952d; }
 
@@ -52,19 +52,10 @@
 
     <div class="search-card">
         <span class="status-load" id="statusServer">🔄 Menghubungkan ke Server Cloud...</span>
-        
-        <div class="form-group">
-            <label>Opsi 1: Pilih Nama Peserta</label>
-            <select id="selectNasabah" onchange="pilihDariDropdown()">
-                <option value="">-- Memuat Daftar Nama --</option>
-            </select>
-        </div>
-
-        <div style="text-align:center; margin: 10px 0; font-weight:bold; color:#a0aec0;">— ATAU —</div>
 
         <div class="form-group">
-            <label>Opsi 2: Ketik ID / Nama Peserta</label>
-            <input type="text" id="keyword" placeholder="Contoh: 1786615604331 atau Aulia">
+            <label>Masukkan ID Peserta atau Nama Anda</label>
+            <input type="text" id="keyword" placeholder="Contoh: 1786615604331 atau Aulia" onkeypress="handleKeyPress(event)">
         </div>
         <button onclick="cariCicilan()">Cari Data Cicilan</button>
         <div class="error-msg" id="errorMsg">Data cicilan tidak ditemukan. Pastikan ID atau nama yang dimasukkan benar.</div>
@@ -125,6 +116,12 @@
         return d.toISOString().split('T')[0]; 
     }
 
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            cariCicilan();
+        }
+    }
+
     function muatData() {
         const statusEl = document.getElementById('statusServer');
         fetch(SCRIPT_URL)
@@ -162,14 +159,13 @@
                     });
                 }
 
-                statusEl.innerText = "⚡ Terkoneksi Ke Cloud (" + allData.length + " Peserta Terload)";
-                statusEl.style.color = "#27ae60";
-
-                const sel = document.getElementById('selectNasabah');
-                sel.innerHTML = '<option value="">-- Pilih Nama Anda --</option>';
-                allData.forEach(n => {
-                    sel.innerHTML += `<option value="${n.id}">${n.nama}</option>`;
-                });
+                if (allData.length > 0) {
+                    statusEl.innerText = "⚡ Terkoneksi Ke Cloud (" + allData.length + " Peserta Terload)";
+                    statusEl.style.color = "#27ae60";
+                } else {
+                    statusEl.innerText = "⚠️ Cloud Terhubung Tetapi Data Sheet Masih Kosong";
+                    statusEl.style.color = "#d69e2e";
+                }
             })
             .catch(err => {
                 console.error("Gagal memuat data:", err);
@@ -180,21 +176,13 @@
 
     window.onload = muatData;
 
-    function pilihDariDropdown() {
-        const val = document.getElementById('selectNasabah').value;
-        if(val) {
-            document.getElementById('keyword').value = val;
-            cariCicilan();
-        }
-    }
-
     function cariCicilan() {
         const query = document.getElementById('keyword').value.trim().toLowerCase();
         const errorMsg = document.getElementById('errorMsg');
         const resultCard = document.getElementById('resultCard');
 
         if (!query) {
-            alert("Silakan pilih nama atau masukkan ID/Nama terlebih dahulu!");
+            alert("Silakan masukkan ID atau Nama Peserta terlebih dahulu!");
             return;
         }
 
