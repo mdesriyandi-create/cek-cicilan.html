@@ -20,13 +20,13 @@
         button { background: #d4af37; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
         button:hover { background: #b8952d; }
 
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .info-box { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; }
         .info-box small { color: #718096; display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; }
         .info-box b { font-size: 16px; color: #2d3748; }
 
         .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; display: none; }
-        .card h2 { margin-top: 0; color: #2c3e50; font-size: 18px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
+        .card h2 { margin-top: 0; color: #2c3e50; font-size: 18px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 15px; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
         th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
@@ -37,7 +37,9 @@
         .badge-mencicil { background: #feebc8; color: #744210; }
         .badge-jt { background: #fed7d7; color: #742a2a; }
 
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; text-decoration: none; display: inline-block; font-weight: bold; background: #27ae60; color: white; border: none; }
         .error-msg { background: #fed7d7; color: #9b2c2c; padding: 12px; border-radius: 6px; margin-top: 10px; display: none; text-align: center; }
+        .status-load { font-size: 13px; color: #718096; margin-bottom: 10px; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -49,9 +51,11 @@
     </div>
 
     <div class="search-card">
+        <span class="status-load" id="statusServer">🔄 Menghubungkan ke Server Cloud...</span>
+
         <div class="form-group">
             <label>Masukkan ID Peserta atau Nama Anda</label>
-            <input type="text" id="keyword" placeholder="Contoh: 1786615604331 atau Aulia">
+            <input type="text" id="keyword" placeholder="Contoh: 1786615604331 atau Aulia" onkeypress="handleKeyPress(event)">
         </div>
         <button onclick="cariCicilan()">Cari Data Cicilan</button>
         <div class="error-msg" id="errorMsg">Data cicilan tidak ditemukan. Pastikan ID atau nama yang dimasukkan benar.</div>
@@ -62,7 +66,6 @@
         
         <div class="info-grid">
             <div class="info-box"><small>Berat Emas</small><b id="lblBerat">-</b></div>
-            <div class="info-box"><small>Total Harga</small><b id="lblTotal">-</b></div>
             <div class="info-box"><small>Uang Muka (DP)</small><b id="lblDP">-</b></div>
             <div class="info-box"><small>Tenor</small><b id="lblTenor">-</b></div>
             <div class="info-box"><small>Iuran Flat / Bulan</small><b id="lblIuran" style="color:#d4af37;">-</b></div>
@@ -70,7 +73,7 @@
         </div>
 
         <h2>📅 Rincian Jadwal Bulan Iuran Kedepan</h2>
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto; margin-bottom: 25px;">
             <table>
                 <thead>
                     <tr>
@@ -83,14 +86,28 @@
                 <tbody id="tabelJadwal"></tbody>
             </table>
         </div>
+
+        <h2>📁 Berkas Dokumen Akad Digital Anda</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Berkas Dokumen</th>
+                        <th>Lihat / Unduh File</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelDokumenNasabah"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
-    const SCRIPT_URL = "[https://script.google.com/macros/s/AKfycbxjqK2U6U2MPtj3fTJbAeaw5PnJqs9PTTyyDZPiiABF9fPawA-wdvdAxPQRMjKirMEu/exec](https://script.google.com/macros/s/AKfycbwBT1VhafvhuINPBws3f0aFfBFjNj2L6l3lIQ5_9t0bfcg3IMkFrUdEDQAO08zBRpDF/exec)";
+    // TEMPELKAN URL APPS SCRIPT NEW DEPLOYMENT ANDA DI BAWAH INI:
+    const SCRIPT_URL = "[https://script.google.com/macros/s/AKfycbxjqK2U6U2MPtj3fTJbAeaw5PnJqs9PTTyyDZPiiABF9fPawA-wdvdAxPQRMjKirMEu/exec](https://script.google.com/macros/s/AKfycbzvVM3dlrS2_qvoC5Hb1_yS41MOK5Nh0cxpcHJzE1BjMGJGZJqFVQodkM_u2_bzoXGI/exec)";
 
     let allData = [];
+    let allDokumen = [];
 
     function formatRp(num) { return "Rp " + Number(num).toLocaleString('id-ID'); }
     function hitungTglBulan(tglStr, bulanKe) { 
@@ -100,16 +117,24 @@
         return d.toISOString().split('T')[0]; 
     }
 
-    // Ambil data saat halaman dibuka
-    window.onload = function() {
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            cariCicilan();
+        }
+    }
+
+    function muatData() {
+        const statusEl = document.getElementById('statusServer');
         fetch(SCRIPT_URL)
             .then(res => res.json())
             .then(data => {
-                let nasabahData = data.nasabah || data;
+                let nasabahData = data.nasabah || [];
+                allDokumen = data.dokumen || [];
+
                 if (Array.isArray(nasabahData)) {
                     allData = nasabahData.map(row => {
-                        let id = String(row[0]);
-                        let nama = row[1];
+                        let id = String(row[0]).trim();
+                        let nama = String(row[1] || '').trim();
                         let berat = row[2];
                         let total = parseFloat(row[3]) || 0;
                         let dp = parseFloat(row[4]) || 0;
@@ -134,9 +159,23 @@
                         return { id, nama, berat, total, dp, tenor, iuranFlat, sisa, tglAwal, jadwal };
                     });
                 }
+
+                if (allData.length > 0) {
+                    statusEl.innerText = "⚡ Terkoneksi Ke Cloud (" + allData.length + " Peserta Terload)";
+                    statusEl.style.color = "#27ae60";
+                } else {
+                    statusEl.innerText = "⚠️ Cloud Terhubung Tetapi Data Sheet Masih Kosong";
+                    statusEl.style.color = "#d69e2e";
+                }
             })
-            .catch(err => console.error("Gagal memuat data:", err));
-    };
+            .catch(err => {
+                console.error("Gagal memuat data:", err);
+                statusEl.innerText = "❌ Gagal Terhubung ke Cloud";
+                statusEl.style.color = "#e74c3c";
+            });
+    }
+
+    window.onload = muatData;
 
     function cariCicilan() {
         const query = document.getElementById('keyword').value.trim().toLowerCase();
@@ -148,7 +187,7 @@
             return;
         }
 
-        const match = allData.find(n => n.id.toLowerCase() === query || n.nama.toLowerCase().includes(query));
+        const match = allData.find(n => n.id.toLowerCase() === query || n.nama.toLowerCase().includes(query) || n.id.toLowerCase().includes(query));
 
         if (!match) {
             errorMsg.style.display = 'block';
@@ -161,7 +200,6 @@
 
         document.getElementById('nasabahTitle').innerText = `Informasi Peserta: ${match.nama} (ID: ${match.id})`;
         document.getElementById('lblBerat').innerText = match.berat + " Gram";
-        document.getElementById('lblTotal').innerText = formatRp(match.total);
         document.getElementById('lblDP').innerText = formatRp(match.dp);
         document.getElementById('lblTenor').innerText = match.tenor + " Bulan";
         document.getElementById('lblIuran').innerText = formatRp(match.iuranFlat);
@@ -181,6 +219,22 @@
                 <td>${badge}</td>
             </tr>`;
         }).join('');
+
+        const docs = allDokumen.filter(d => String(d[1]).trim() === String(match.id));
+        const tbodyDocs = document.getElementById('tabelDokumenNasabah');
+
+        if (docs.length === 0) {
+            tbodyDocs.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#999;">Belum ada berkas dokumen yang diunggah untuk akun Anda.</td></tr>`;
+        } else {
+            tbodyDocs.innerHTML = docs.map(d => `
+                <tr>
+                    <td><b>${d[3]}</b></td>
+                    <td>
+                        <a href="${d[4]}" target="_blank" class="btn-sm">🔗 Buka / Unduh Berkas</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
         resultCard.scrollIntoView({ behavior: 'smooth' });
     }
