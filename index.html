@@ -6,47 +6,161 @@
     <title>Cek Cicilan Emas - Pembeliaset.id</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { margin: 0; padding: 20px; background-color: #f0f2f5; color: #333; min-height: 100vh; }
-        .container { max-width: 800px; margin: auto; }
         
-        .header { text-align: center; margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .header h1 { margin: 0 0 5px 0; color: #d4af37; font-size: 24px; }
-        .header p { margin: 0; color: #666; font-size: 14px; }
+        /* BACKGROUND UTAMA ELEGAN DENGAN GRADASI BERANIMASI */
+        body { 
+            margin: 0; 
+            padding: 30px 15px; 
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            background-attachment: fixed;
+            color: #333; 
+            min-height: 100vh;
+            position: relative;
+        }
 
-        .search-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        /* ORNAMEN DEKORATIF LATAR BELAKANG */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -100px;
+            right: -100px;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(41, 128, 185, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container { max-width: 850px; margin: auto; position: relative; z-index: 1; }
+        
+        /* HEADER PORTAL MEWAH */
+        .header { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 25px 20px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .header h1 { margin: 0 0 6px 0; color: #b8952d; font-size: 26px; font-weight: 800; letter-spacing: 0.5px; }
+        .header p { margin: 0; color: #555; font-size: 14px; font-weight: 500; }
+
+        /* KARTU PENCARIAN MODERN */
+        .search-card { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
-        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
-        button { background: #d4af37; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
-        button:hover { background: #b8952d; }
-
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .info-box { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; }
-        .info-box small { color: #718096; display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; }
-        .info-box b { font-size: 16px; color: #2d3748; }
-
-        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; display: none; }
-        .card h2 { margin-top: 0; color: #2c3e50; font-size: 18px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-bottom: 15px; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
-        th { background: #f7fafc; color: #4a5568; font-weight: 600; }
+        label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: #2c3e50; }
+        input { 
+            width: 100%; 
+            padding: 14px 16px; 
+            border: 1.5px solid #cbd5e0; 
+            border-radius: 10px; 
+            font-size: 15px; 
+            transition: all 0.3s ease;
+            outline: none;
+            background: #f8fafc;
+        }
+        input:focus { border-color: #d4af37; background: #fff; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); }
         
-        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        button { 
+            background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%); 
+            color: white; 
+            border: none; 
+            padding: 14px 20px; 
+            cursor: pointer; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            width: 100%; 
+            font-size: 16px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        button:hover { 
+            background: linear-gradient(135deg, #b8952d 0%, #8e6c06 100%); 
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* GRID INFORMASI METRIK */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .info-box { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 12px; 
+            padding: 16px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            transition: 0.2s;
+        }
+        .info-box:hover { border-color: #d4af37; transform: translateY(-2px); }
+        .info-box small { color: #718096; display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-box b { font-size: 17px; color: #1a202c; font-weight: 700; }
+
+        /* KARTU HASIL PENCARIAN */
+        .card { 
+            background: rgba(255, 255, 255, 0.96); 
+            padding: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+            margin-bottom: 25px; 
+            display: none; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.4s ease-out;
+        }
+        .card h2 { margin-top: 0; color: #1a202c; font-size: 18px; border-bottom: 2px solid #edf2f7; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; }
+
+        /* TABEL RAFI & STYLISH */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; font-size: 13.5px; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; }
+        th, td { padding: 12px 14px; text-align: left; }
+        th { background: #edf2f7; color: #2d3748; font-weight: 700; border-bottom: 2px solid #cbd5e0; }
+        td { border-bottom: 1px solid #edf2f7; background: #fff; }
+        tr:last-child td { border-bottom: none; }
+        
+        .badge { padding: 5px 10px; border-radius: 6px; font-weight: 700; font-size: 11px; display: inline-block; }
         .badge-lunas { background: #c6f6d5; color: #22543d; }
         .badge-mencicil { background: #feebc8; color: #744210; }
         .badge-jt { background: #fed7d7; color: #742a2a; }
 
-        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; text-decoration: none; display: inline-block; font-weight: bold; background: #27ae60; color: white; border: none; }
-        .error-msg { background: #fed7d7; color: #9b2c2c; padding: 12px; border-radius: 6px; margin-top: 10px; display: none; text-align: center; }
-        .status-load { font-size: 13px; color: #718096; margin-bottom: 10px; display: block; font-weight: bold; }
+        .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 700; background: #27ae60; color: white; border: none; transition: 0.2s; }
+        .btn-sm:hover { background: #219150; box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3); }
+        
+        .error-msg { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; padding: 14px; border-radius: 10px; margin-top: 15px; display: none; text-align: center; font-weight: 600; font-size: 14px; }
+        .status-load { font-size: 13px; color: #4a5568; margin-bottom: 12px; display: block; font-weight: 700; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>🔍 Portal Cek Cicilan Emas</h1>
+        <h1>✨ Portal Cek Cicilan Emas</h1>
         <p>Pembeliaset.id - Cek Informasi & Status Pembayaran Cicilan Anda</p>
     </div>
 
@@ -103,7 +217,6 @@
 </div>
 
 <script>
-    // TEMPELKAN URL APPS SCRIPT NEW DEPLOYMENT ANDA DI BAWAH INI:
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvVM3dlrS2_qvoC5Hb1_yS41MOK5Nh0cxpcHJzE1BjMGJGZJqFVQodkM_u2_bzoXGI/exec";
 
     let allData = [];
