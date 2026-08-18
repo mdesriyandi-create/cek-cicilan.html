@@ -1,2 +1,189 @@
-# cek-cicilan.html
-Chanel ini digunakan untuk melihat cicilan Aset anda
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Cicilan Emas - Pembeliaset.id</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; padding: 20px; background-color: #f0f2f5; color: #333; min-height: 100vh; }
+        .container { max-width: 800px; margin: auto; }
+        
+        .header { text-align: center; margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .header h1 { margin: 0 0 5px 0; color: #d4af37; font-size: 24px; }
+        .header p { margin: 0; color: #666; font-size: 14px; }
+
+        .search-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+        button { background: #d4af37; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 6px; font-weight: bold; width: 100%; font-size: 15px; transition: 0.2s; }
+        button:hover { background: #b8952d; }
+
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .info-box { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; }
+        .info-box small { color: #718096; display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; }
+        .info-box b { font-size: 16px; color: #2d3748; }
+
+        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px; display: none; }
+        .card h2 { margin-top: 0; color: #2c3e50; font-size: 18px; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
+        th { background: #f7fafc; color: #4a5568; font-weight: 600; }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .badge-lunas { background: #c6f6d5; color: #22543d; }
+        .badge-mencicil { background: #feebc8; color: #744210; }
+        .badge-jt { background: #fed7d7; color: #742a2a; }
+
+        .error-msg { background: #fed7d7; color: #9b2c2c; padding: 12px; border-radius: 6px; margin-top: 10px; display: none; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🔍 Portal Cek Cicilan Emas</h1>
+        <p>Pembeliaset.id - Cek Informasi & Status Pembayaran Cicilan Anda</p>
+    </div>
+
+    <div class="search-card">
+        <div class="form-group">
+            <label>Masukkan ID Peserta atau Nama Anda</label>
+            <input type="text" id="keyword" placeholder="Contoh: 1786615604331 atau Aulia">
+        </div>
+        <button onclick="cariCicilan()">Cari Data Cicilan</button>
+        <div class="error-msg" id="errorMsg">Data cicilan tidak ditemukan. Pastikan ID atau nama yang dimasukkan benar.</div>
+    </div>
+
+    <div class="card" id="resultCard">
+        <h2 id="nasabahTitle">Informasi Peserta</h2>
+        
+        <div class="info-grid">
+            <div class="info-box"><small>Berat Emas</small><b id="lblBerat">-</b></div>
+            <div class="info-box"><small>Total Harga</small><b id="lblTotal">-</b></div>
+            <div class="info-box"><small>Uang Muka (DP)</small><b id="lblDP">-</b></div>
+            <div class="info-box"><small>Tenor</small><b id="lblTenor">-</b></div>
+            <div class="info-box"><small>Iuran Flat / Bulan</small><b id="lblIuran" style="color:#d4af37;">-</b></div>
+            <div class="info-box"><small>Sisa Tagihan</small><b id="lblSisa" style="color:#e53e3e;">-</b></div>
+        </div>
+
+        <h2>📅 Rincian Jadwal Bulan Iuran Kedepan</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bulan Ke-</th>
+                        <th>Tanggal Jatuh Tempo</th>
+                        <th>Nominal Iuran</th>
+                        <th>Status Pembayaran</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelJadwal"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
+    const SCRIPT_URL = "[https://script.google.com/macros/s/AKfycbxjqK2U6U2MPtj3fTJbAeaw5PnJqs9PTTyyDZPiiABF9fPawA-wdvdAxPQRMjKirMEu/exec](https://script.google.com/macros/s/AKfycbwBT1VhafvhuINPBws3f0aFfBFjNj2L6l3lIQ5_9t0bfcg3IMkFrUdEDQAO08zBRpDF/exec)";
+
+    let allData = [];
+
+    function formatRp(num) { return "Rp " + Number(num).toLocaleString('id-ID'); }
+    function hitungTglBulan(tglStr, bulanKe) { 
+        if(!tglStr) return "-";
+        let d = new Date(tglStr); 
+        d.setMonth(d.getMonth() + bulanKe); 
+        return d.toISOString().split('T')[0]; 
+    }
+
+    // Ambil data saat halaman dibuka
+    window.onload = function() {
+        fetch(SCRIPT_URL)
+            .then(res => res.json())
+            .then(data => {
+                let nasabahData = data.nasabah || data;
+                if (Array.isArray(nasabahData)) {
+                    allData = nasabahData.map(row => {
+                        let id = String(row[0]);
+                        let nama = row[1];
+                        let berat = row[2];
+                        let total = parseFloat(row[3]) || 0;
+                        let dp = parseFloat(row[4]) || 0;
+                        let tenor = parseInt(row[5]) || 12;
+                        let iuranFlat = parseFloat(row[6]) || 0;
+                        let sisa = parseFloat(row[7]) || 0;
+                        let tglAwal = row[8] ? new Date(row[8]).toISOString().split('T')[0] : '';
+
+                        let totalTerbayar = (total - dp) - sisa;
+                        let jadwal = [];
+                        let sisaDana = totalTerbayar;
+
+                        for (let i = 0; i < tenor; i++) {
+                            let st = 'Belum Lunas';
+                            if (sisaDana >= iuranFlat) {
+                                st = 'Lunas';
+                                sisaDana -= iuranFlat;
+                            }
+                            jadwal.push({ bulan: i + 1, tglJatuhTempo: hitungTglBulan(tglAwal, i), nominal: iuranFlat, status: st });
+                        }
+
+                        return { id, nama, berat, total, dp, tenor, iuranFlat, sisa, tglAwal, jadwal };
+                    });
+                }
+            })
+            .catch(err => console.error("Gagal memuat data:", err));
+    };
+
+    function cariCicilan() {
+        const query = document.getElementById('keyword').value.trim().toLowerCase();
+        const errorMsg = document.getElementById('errorMsg');
+        const resultCard = document.getElementById('resultCard');
+
+        if (!query) {
+            alert("Silakan masukkan ID atau Nama Peserta terlebih dahulu!");
+            return;
+        }
+
+        const match = allData.find(n => n.id.toLowerCase() === query || n.nama.toLowerCase().includes(query));
+
+        if (!match) {
+            errorMsg.style.display = 'block';
+            resultCard.style.display = 'none';
+            return;
+        }
+
+        errorMsg.style.display = 'none';
+        resultCard.style.display = 'block';
+
+        document.getElementById('nasabahTitle').innerText = `Informasi Peserta: ${match.nama} (ID: ${match.id})`;
+        document.getElementById('lblBerat').innerText = match.berat + " Gram";
+        document.getElementById('lblTotal').innerText = formatRp(match.total);
+        document.getElementById('lblDP').innerText = formatRp(match.dp);
+        document.getElementById('lblTenor').innerText = match.tenor + " Bulan";
+        document.getElementById('lblIuran').innerText = formatRp(match.iuranFlat);
+        document.getElementById('lblSisa').innerText = formatRp(match.sisa);
+
+        const today = new Date().toISOString().split('T')[0];
+
+        document.getElementById('tabelJadwal').innerHTML = match.jadwal.map(j => {
+            let badge = j.status === 'Lunas' 
+                ? '<span class="badge badge-lunas">LUNAS</span>' 
+                : (j.tglJatuhTempo < today ? '<span class="badge badge-jt">JATUH TEMPO</span>' : '<span class="badge badge-mencicil">BELUM DIBAYAR</span>');
+            
+            return `<tr>
+                <td>Bulan Ke-${j.bulan}</td>
+                <td>${j.tglJatuhTempo}</td>
+                <td>${formatRp(j.nominal)}</td>
+                <td>${badge}</td>
+            </tr>`;
+        }).join('');
+
+        resultCard.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
