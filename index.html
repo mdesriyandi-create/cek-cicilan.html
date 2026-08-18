@@ -61,7 +61,6 @@
     <div class="card" id="resultCard">
         <h2 id="nasabahTitle">Informasi Peserta</h2>
         
-        <!-- HANYA MENAMPILKAN 5 KOTAK (TANPA TOTAL HARGA) -->
         <div class="info-grid">
             <div class="info-box"><small>Berat Emas</small><b id="lblBerat">-</b></div>
             <div class="info-box"><small>Uang Muka (DP)</small><b id="lblDP">-</b></div>
@@ -114,7 +113,7 @@
         return d.toISOString().split('T')[0]; 
     }
 
-    window.onload = function() {
+    function muatData() {
         fetch(SCRIPT_URL)
             .then(res => res.json())
             .then(data => {
@@ -123,8 +122,8 @@
 
                 if (Array.isArray(nasabahData)) {
                     allData = nasabahData.map(row => {
-                        let id = String(row[0]);
-                        let nama = row[1];
+                        let id = String(row[0]).trim();
+                        let nama = String(row[1] || '').trim();
                         let berat = row[2];
                         let total = parseFloat(row[3]) || 0;
                         let dp = parseFloat(row[4]) || 0;
@@ -151,7 +150,9 @@
                 }
             })
             .catch(err => console.error("Gagal memuat data:", err));
-    };
+    }
+
+    window.onload = muatData;
 
     function cariCicilan() {
         const query = document.getElementById('keyword').value.trim().toLowerCase();
@@ -163,7 +164,8 @@
             return;
         }
 
-        const match = allData.find(n => n.id.toLowerCase() === query || n.nama.toLowerCase().includes(query));
+        // Pencarian fleksibel (cocokkan ID persis/sebagian ATAU Nama sebagian)
+        const match = allData.find(n => n.id.toLowerCase().includes(query) || n.nama.toLowerCase().includes(query));
 
         if (!match) {
             errorMsg.style.display = 'block';
@@ -197,8 +199,8 @@
             </tr>`;
         }).join('');
 
-        // Tampilkan Dokumen Khusus Nasabah Ini
-        const docs = allDokumen.filter(d => String(d[1]) === String(match.id));
+        // Tampilkan Dokumen
+        const docs = allDokumen.filter(d => String(d[1]).trim() === String(match.id));
         const tbodyDocs = document.getElementById('tabelDokumenNasabah');
 
         if (docs.length === 0) {
