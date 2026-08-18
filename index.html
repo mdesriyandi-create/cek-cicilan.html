@@ -7,7 +7,6 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* THEME LUXURY WHITE & GOLD WAVE (SESUAI GAMBAR TEMPLATE) */
         body { 
             margin: 0; 
             padding: 30px 15px; 
@@ -23,7 +22,6 @@
             overflow-x: hidden;
         }
 
-        /* ORNAMEN LENGKUNGAN EMAS & PERAK TRANSPARAN */
         body::before {
             content: "";
             position: fixed;
@@ -56,7 +54,6 @@
 
         .container { max-width: 850px; margin: auto; position: relative; z-index: 1; }
         
-        /* HEADER KACA PERAK DENGAN AKSEN EMAS */
         .header { 
             text-align: center; 
             margin-bottom: 30px; 
@@ -69,7 +66,6 @@
         .header h1 { margin: 0 0 6px 0; color: #b8952d; font-size: 26px; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .header p { margin: 0; color: #64748b; font-size: 14px; font-weight: 600; }
 
-        /* KARTU PENCARIAN MEWAH */
         .search-card { 
             background: rgba(255, 255, 255, 0.92); 
             padding: 25px; 
@@ -112,7 +108,6 @@
             box-shadow: 0 6px 20px rgba(197, 155, 39, 0.5);
         }
 
-        /* GRID METRIK HANYA 4 KOTAK (TANPA SISA TAGIHAN) */
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .info-box { 
             background: #ffffff; 
@@ -127,7 +122,6 @@
         .info-box small { color: #64748b; display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .info-box b { font-size: 17px; color: #1e293b; font-weight: 700; }
 
-        /* KARTU HASIL */
         .card { 
             background: rgba(255, 255, 255, 0.92); 
             padding: 25px; 
@@ -141,7 +135,6 @@
         }
         .card h2 { margin-top: 0; color: #1e293b; font-size: 18px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; }
 
-        /* TABEL ELEGANT */
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; font-size: 13.5px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
         th, td { padding: 12px 14px; text-align: left; }
         th { background: #f8fafc; color: #334155; font-weight: 700; border-bottom: 2px solid #e2e8f0; }
@@ -187,7 +180,6 @@
     <div class="card" id="resultCard">
         <h2 id="nasabahTitle">Informasi Peserta</h2>
         
-        <!-- HANYA 4 KOTAK INFORMASI (KOTAK SISA TAGIHAN & TOTAL HARGA DAHILANGKAN) -->
         <div class="info-grid">
             <div class="info-box"><small>Berat Emas</small><b id="lblBerat">-</b></div>
             <div class="info-box"><small>Uang Muka (DP)</small><b id="lblDP">-</b></div>
@@ -226,7 +218,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvVM3dlrS2_qvoC5Hb1_yS41MOK5Nh0cxpcHJzE1BjMGJGZJqFVQodkM_u2_bzoXGI/execc";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzLtJ4W1J8YXYYaVmHWT5xyrWBZCEkDPz389k6qX3LN_8hR_BhieOKWzzAB0eSmC1E/exec";
 
     let allData = [];
     let allDokumen = [];
@@ -245,59 +237,62 @@
         }
     }
 
-    function muatData() {
+    // FUNGSI PENERIMA BALASAN DATA VIA JSONP (BEBAS CORS)
+    function handleCloudData(data) {
         const statusEl = document.getElementById('statusServer');
-        fetch(SCRIPT_URL)
-            .then(res => res.json())
-            .then(data => {
-                let nasabahData = data.nasabah || [];
-                allDokumen = data.dokumen || [];
+        let nasabahData = data.nasabah || [];
+        allDokumen = data.dokumen || [];
 
-                if (Array.isArray(nasabahData)) {
-                    allData = nasabahData.map(row => {
-                        let id = String(row[0]).trim();
-                        let nama = String(row[1] || '').trim();
-                        let berat = row[2];
-                        let total = parseFloat(row[3]) || 0;
-                        let dp = parseFloat(row[4]) || 0;
-                        let tenor = parseInt(row[5]) || 12;
-                        let iuranFlat = parseFloat(row[6]) || 0;
-                        let sisa = parseFloat(row[7]) || 0;
-                        let tglAwal = row[8] ? new Date(row[8]).toISOString().split('T')[0] : '';
+        if (Array.isArray(nasabahData)) {
+            allData = nasabahData.map(row => {
+                let id = String(row[0]).trim();
+                let nama = String(row[1] || '').trim();
+                let berat = row[2];
+                let total = parseFloat(row[3]) || 0;
+                let dp = parseFloat(row[4]) || 0;
+                let tenor = parseInt(row[5]) || 12;
+                let iuranFlat = parseFloat(row[6]) || 0;
+                let sisa = parseFloat(row[7]) || 0;
+                let tglAwal = row[8] ? new Date(row[8]).toISOString().split('T')[0] : '';
 
-                        let totalTerbayar = (total - dp) - sisa;
-                        let jadwal = [];
-                        let sisaDana = totalTerbayar;
+                let totalTerbayar = (total - dp) - sisa;
+                let jadwal = [];
+                let sisaDana = totalTerbayar;
 
-                        for (let i = 0; i < tenor; i++) {
-                            let st = 'Belum Lunas';
-                            if (sisaDana >= iuranFlat) {
-                                st = 'Lunas';
-                                sisaDana -= iuranFlat;
-                            }
-                            jadwal.push({ bulan: i + 1, tglJatuhTempo: hitungTglBulan(tglAwal, i), nominal: iuranFlat, status: st });
-                        }
-
-                        return { id, nama, berat, total, dp, tenor, iuranFlat, sisa, tglAwal, jadwal };
-                    });
+                for (let i = 0; i < tenor; i++) {
+                    let st = 'Belum Lunas';
+                    if (sisaDana >= iuranFlat) {
+                        st = 'Lunas';
+                        sisaDana -= iuranFlat;
+                    }
+                    jadwal.push({ bulan: i + 1, tglJatuhTempo: hitungTglBulan(tglAwal, i), nominal: iuranFlat, status: st });
                 }
 
-                if (allData.length > 0) {
-                    statusEl.innerText = "⚡ Terkoneksi Ke Cloud (" + allData.length + " Peserta Terload)";
-                    statusEl.style.color = "#15803d";
-                } else {
-                    statusEl.innerText = "⚠️ Cloud Terhubung Tetapi Data Sheet Masih Kosong";
-                    statusEl.style.color = "#b45309";
-                }
-            })
-            .catch(err => {
-                console.error("Gagal memuat data:", err);
-                statusEl.innerText = "❌ Gagal Terhubung ke Cloud";
-                statusEl.style.color = "#b91c1c";
+                return { id, nama, berat, total, dp, tenor, iuranFlat, sisa, tglAwal, jadwal };
             });
+        }
+
+        if (allData.length > 0) {
+            statusEl.innerText = "⚡ Terkoneksi Ke Cloud (" + allData.length + " Peserta Terload)";
+            statusEl.style.color = "#15803d";
+        } else {
+            statusEl.innerText = "⚠️ Cloud Terhubung Tetapi Data Sheet Masih Kosong";
+            statusEl.style.color = "#b45309";
+        }
     }
 
-    window.onload = muatData;
+    function muatDataCloudJSONP() {
+        const script = document.createElement('script');
+        script.src = SCRIPT_URL + "?callback=handleCloudData";
+        script.onerror = function() {
+            const statusEl = document.getElementById('statusServer');
+            statusEl.innerText = "❌ Gagal Terhubung ke Cloud";
+            statusEl.style.color = "#b91c1c";
+        };
+        document.body.appendChild(script);
+    }
+
+    window.onload = muatDataCloudJSONP;
 
     function cariCicilan() {
         const query = document.getElementById('keyword').value.trim().toLowerCase();
