@@ -7,148 +7,157 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* BACKGROUND UTAMA ELEGAN DENGAN GRADASI BERANIMASI */
+        /* THEME LUXURY WHITE & GOLD WAVE (SESUAI GAMBAR TEMPLATE) */
         body { 
             margin: 0; 
             padding: 30px 15px; 
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            background-color: #e6e9ed;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, transparent 60%);
             background-attachment: fixed;
-            color: #333; 
+            color: #2c3e50; 
             min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* ORNAMEN DEKORATIF LATAR BELAKANG */
+        /* ORNAMEN LENGKUNGAN EMAS & PERAK TRANSPARAN */
         body::before {
             content: "";
             position: fixed;
-            top: -100px;
-            right: -100px;
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
+            top: -150px;
+            left: -100px;
+            width: 700px;
+            height: 700px;
+            border: 35px solid rgba(212, 175, 55, 0.35);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.8), 0 0 30px rgba(212, 175, 55, 0.2);
             pointer-events: none;
             z-index: 0;
+            transform: rotate(-15deg);
         }
 
         body::after {
             content: "";
             position: fixed;
-            bottom: -100px;
-            left: -100px;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(41, 128, 185, 0.15) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
+            bottom: -200px;
+            right: -100px;
+            width: 800px;
+            height: 800px;
+            border: 45px solid rgba(212, 175, 55, 0.3);
+            border-radius: 60% 40% 30% 70% / 50% 30% 70% 50%;
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.8), 0 0 40px rgba(212, 175, 55, 0.2);
             pointer-events: none;
             z-index: 0;
+            transform: rotate(25deg);
         }
 
         .container { max-width: 850px; margin: auto; position: relative; z-index: 1; }
         
-        /* HEADER PORTAL MEWAH */
+        /* HEADER KACA PERAK DENGAN AKSEN EMAS */
         .header { 
             text-align: center; 
             margin-bottom: 30px; 
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.88); 
             padding: 25px 20px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 0 0 2px rgba(212, 175, 55, 0.4); 
+            backdrop-filter: blur(12px);
         }
-        .header h1 { margin: 0 0 6px 0; color: #b8952d; font-size: 26px; font-weight: 800; letter-spacing: 0.5px; }
-        .header p { margin: 0; color: #555; font-size: 14px; font-weight: 500; }
+        .header h1 { margin: 0 0 6px 0; color: #b8952d; font-size: 26px; font-weight: 800; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .header p { margin: 0; color: #64748b; font-size: 14px; font-weight: 600; }
 
-        /* KARTU PENCARIAN MODERN */
+        /* KARTU PENCARIAN MEWAH */
         .search-card { 
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.92); 
             padding: 25px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 0 0 2px rgba(255, 255, 255, 0.9); 
             margin-bottom: 25px; 
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
         }
         .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: #2c3e50; }
+        label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: #334155; }
         input { 
             width: 100%; 
             padding: 14px 16px; 
-            border: 1.5px solid #cbd5e0; 
-            border-radius: 10px; 
+            border: 1.5px solid #cbd5e1; 
+            border-radius: 12px; 
             font-size: 15px; 
             transition: all 0.3s ease;
             outline: none;
-            background: #f8fafc;
+            background: rgba(248, 250, 252, 0.8);
         }
-        input:focus { border-color: #d4af37; background: #fff; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2); }
+        input:focus { border-color: #d4af37; background: #fff; box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2); }
         
         button { 
-            background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%); 
+            background: linear-gradient(135deg, #e6c666 0%, #c59b27 50%, #9a7410 100%); 
             color: white; 
             border: none; 
             padding: 14px 20px; 
             cursor: pointer; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             font-weight: 700; 
             width: 100%; 
             font-size: 16px; 
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(197, 155, 39, 0.4);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         button:hover { 
-            background: linear-gradient(135deg, #b8952d 0%, #8e6c06 100%); 
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(197, 155, 39, 0.5);
         }
 
-        /* GRID INFORMASI METRIK */
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        /* GRID METRIK HANYA 4 KOTAK (TANPA SISA TAGIHAN) */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .info-box { 
             background: #ffffff; 
             border: 1px solid #e2e8f0; 
+            border-top: 3px solid #d4af37;
             border-radius: 12px; 
             padding: 16px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             transition: 0.2s;
         }
-        .info-box:hover { border-color: #d4af37; transform: translateY(-2px); }
-        .info-box small { color: #718096; display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .info-box b { font-size: 17px; color: #1a202c; font-weight: 700; }
+        .info-box:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(212, 175, 55, 0.15); }
+        .info-box small { color: #64748b; display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-box b { font-size: 17px; color: #1e293b; font-weight: 700; }
 
-        /* KARTU HASIL PENCARIAN */
+        /* KARTU HASIL */
         .card { 
-            background: rgba(255, 255, 255, 0.96); 
+            background: rgba(255, 255, 255, 0.92); 
             padding: 25px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); 
             margin-bottom: 25px; 
             display: none; 
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
             animation: fadeIn 0.4s ease-out;
         }
-        .card h2 { margin-top: 0; color: #1a202c; font-size: 18px; border-bottom: 2px solid #edf2f7; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; }
+        .card h2 { margin-top: 0; color: #1e293b; font-size: 18px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 18px; font-weight: 700; }
 
-        /* TABEL RAFI & STYLISH */
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; font-size: 13.5px; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; }
+        /* TABEL ELEGANT */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 10px; font-size: 13.5px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
         th, td { padding: 12px 14px; text-align: left; }
-        th { background: #edf2f7; color: #2d3748; font-weight: 700; border-bottom: 2px solid #cbd5e0; }
-        td { border-bottom: 1px solid #edf2f7; background: #fff; }
+        th { background: #f8fafc; color: #334155; font-weight: 700; border-bottom: 2px solid #e2e8f0; }
+        td { border-bottom: 1px solid #f1f5f9; background: #fff; }
         tr:last-child td { border-bottom: none; }
         
         .badge { padding: 5px 10px; border-radius: 6px; font-weight: 700; font-size: 11px; display: inline-block; }
-        .badge-lunas { background: #c6f6d5; color: #22543d; }
-        .badge-mencicil { background: #feebc8; color: #744210; }
-        .badge-jt { background: #fed7d7; color: #742a2a; }
+        .badge-lunas { background: #dcfce7; color: #15803d; }
+        .badge-mencicil { background: #fef3c7; color: #b45309; }
+        .badge-jt { background: #fee2e2; color: #b91c1c; }
 
-        .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 700; background: #27ae60; color: white; border: none; transition: 0.2s; }
-        .btn-sm:hover { background: #219150; box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3); }
+        .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 700; background: #10b981; color: white; border: none; transition: 0.2s; }
+        .btn-sm:hover { background: #059669; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); }
         
-        .error-msg { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; padding: 14px; border-radius: 10px; margin-top: 15px; display: none; text-align: center; font-weight: 600; font-size: 14px; }
-        .status-load { font-size: 13px; color: #4a5568; margin-bottom: 12px; display: block; font-weight: 700; }
+        .error-msg { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; padding: 14px; border-radius: 12px; margin-top: 15px; display: none; text-align: center; font-weight: 600; font-size: 14px; }
+        .status-load { font-size: 13px; color: #64748b; margin-bottom: 12px; display: block; font-weight: 700; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -178,12 +187,12 @@
     <div class="card" id="resultCard">
         <h2 id="nasabahTitle">Informasi Peserta</h2>
         
+        <!-- HANYA 4 KOTAK INFORMASI (KOTAK SISA TAGIHAN & TOTAL HARGA DAHILANGKAN) -->
         <div class="info-grid">
             <div class="info-box"><small>Berat Emas</small><b id="lblBerat">-</b></div>
             <div class="info-box"><small>Uang Muka (DP)</small><b id="lblDP">-</b></div>
             <div class="info-box"><small>Tenor</small><b id="lblTenor">-</b></div>
-            <div class="info-box"><small>Iuran Flat / Bulan</small><b id="lblIuran" style="color:#d4af37;">-</b></div>
-            <div class="info-box"><small>Sisa Tagihan</small><b id="lblSisa" style="color:#e53e3e;">-</b></div>
+            <div class="info-box"><small>Iuran Flat / Bulan</small><b id="lblIuran" style="color:#b8952d;">-</b></div>
         </div>
 
         <h2>📅 Rincian Jadwal Bulan Iuran Kedepan</h2>
@@ -217,7 +226,7 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvVM3dlrS2_qvoC5Hb1_yS41MOK5Nh0cxpcHJzE1BjMGJGZJqFVQodkM_u2_bzoXGI/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzvVM3dlrS2_qvoC5Hb1_yS41MOK5Nh0cxpcHJzE1BjMGJGZJqFVQodkM_u2_bzoXGI/execc";
 
     let allData = [];
     let allDokumen = [];
@@ -275,16 +284,16 @@
 
                 if (allData.length > 0) {
                     statusEl.innerText = "⚡ Terkoneksi Ke Cloud (" + allData.length + " Peserta Terload)";
-                    statusEl.style.color = "#27ae60";
+                    statusEl.style.color = "#15803d";
                 } else {
                     statusEl.innerText = "⚠️ Cloud Terhubung Tetapi Data Sheet Masih Kosong";
-                    statusEl.style.color = "#d69e2e";
+                    statusEl.style.color = "#b45309";
                 }
             })
             .catch(err => {
                 console.error("Gagal memuat data:", err);
                 statusEl.innerText = "❌ Gagal Terhubung ke Cloud";
-                statusEl.style.color = "#e74c3c";
+                statusEl.style.color = "#b91c1c";
             });
     }
 
@@ -316,7 +325,6 @@
         document.getElementById('lblDP').innerText = formatRp(match.dp);
         document.getElementById('lblTenor').innerText = match.tenor + " Bulan";
         document.getElementById('lblIuran').innerText = formatRp(match.iuranFlat);
-        document.getElementById('lblSisa').innerText = formatRp(match.sisa);
 
         const today = new Date().toISOString().split('T')[0];
 
@@ -337,7 +345,7 @@
         const tbodyDocs = document.getElementById('tabelDokumenNasabah');
 
         if (docs.length === 0) {
-            tbodyDocs.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#999;">Belum ada berkas dokumen yang diunggah untuk akun Anda.</td></tr>`;
+            tbodyDocs.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#94a3b8;">Belum ada berkas dokumen yang diunggah untuk akun Anda.</td></tr>`;
         } else {
             tbodyDocs.innerHTML = docs.map(d => `
                 <tr>
